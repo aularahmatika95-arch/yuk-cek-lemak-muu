@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuk Cek Lemak Mu! - Sistem Monitoring Kolesterol by NIRMAYSI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #FF6B6B 0%, transparent 70%);
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .creator {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.1em;
+            animation: pulse 2s infinite;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4); }
+            50% { box-shadow: 0 5px 25px rgba(255, 107, 107, 0.6); }
+            100% { box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4); }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #FF6B6B 0%, #4ECDC4 100%);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #FF6B6B;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+            color: white;
+            border: none;
+            padding: 16px 35px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 15px;
+            display: none;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-optimal {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .result-borderline {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+            border: 2px solid #ffc107;
+            color: #856404;
+        }
+
+        .result-high {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .info-table th, .info-table td {
+            padding: 14px;
+            text-align: left;
+        }
+
+        .info-table th {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .info-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .info-table tr:hover {
+            background: #e9ecef;
+        }
+
+        .tips-list, .food-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li, .food-list li {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 5px solid #FF6B6B;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tips-list li:hover, .food-list li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tips-list li:before {
+            content: "💡 ";
+            font-size: 1.2em;
+        }
+
+        .good-food {
+            border-left-color: #28a745 !important;
+        }
+
+        .good-food:before {
+            content: "✅ ";
+        }
+
+        .bad-food {
+            border-left-color: #dc3545 !important;
+        }
+
+        .bad-food:before {
+            content: "❌ ";
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #FF6B6B;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .footer {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .footer-logo {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .cholesterol-meter {
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(90deg, 
+                #28a745 0%, 
+                #28a745 33%, 
+                #ffc107 33%, 
+                #ffc107 66%, 
+                #dc3545 66%, 
+                #dc3545 100%);
+            border-radius: 15px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .meter-indicator {
+            position: absolute;
+            top: -10px;
+            width: 4px;
+            height: 50px;
+            background: #333;
+            transition: left 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🩺</div>
+            <h1>YUK CEK LEMAK MU!</h1>
+            <p class="subtitle">Sistem Monitoring Kolesterol & Kesehatan Jantung</p>
+            <div class="creator">🚀 Dipersembahkan oleh: NIRMAYSI</div>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <h2><span class="icon">📊</span> Kalkulator Kolesterol</h2>
+                <form id="cholesterolForm">
+                    <div class="form-group">
+                        <label for="totalCholesterol">Kolesterol Total (mg/dL):</label>
+                        <input type="number" id="totalCholesterol" placeholder="Contoh: 200" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ldl">LDL - Kolesterol Jahat (mg/dL):</label>
+                        <input type="number" id="ldl" placeholder="Contoh: 130" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hdl">HDL - Kolesterol Baik (mg/dL):</label>
+                        <input type="number" id="hdl" placeholder="Contoh: 50" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="triglycerides">Trigliserida (mg/dL):</label>
+                        <input type="number" id="triglycerides" placeholder="Contoh: 150" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Usia (tahun):</label>
+                        <input type="number" id="age" placeholder="Masukkan usia Anda" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Jenis Kelamin:</label>
+                        <select id="gender" required>
+                            <option value="">Pilih jenis kelamin</option>
+                            <option value="pria">Pria</option>
+                            <option value="wanita">Wanita</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">🔍 CEK LEMAK MU SEKARANG!</button>
+                </form>
+
+                <div id="result" class="result-box"></div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">📈</span> Nilai Normal Kolesterol</h2>
+                <table class="info-table">
+                    <thead>
+                        <tr>
+                            <th>Jenis</th>
+                            <th>Optimal</th>
+                            <th>Borderline</th>
+                            <th>Tinggi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td>&lt; 200</td>
+                            <td>200-239</td>
+                            <td>≥ 240</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LDL</strong></td>
+                            <td>&lt; 100</td>
+                            <td>130-159</td>
+                            <td>≥ 160</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HDL</strong></td>
+                            <td>≥ 60</td>
+                            <td>40-59</td>
+                            <td>&lt; 40</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Trigliserida</strong></td>
+                            <td>&lt; 150</td>
+                            <td>150-199</td>
+                            <td>≥ 200</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="cholesterol-meter">
+                    <div class="meter-indicator" id="meterIndicator"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">🥗</span> Makanan Penurun Kolesterol</h2>
+                <ul class="food-list">
+                    <li class="good-food">Oatmeal & gandum utuh - Kaya serat larut</li>
+                    <li class="good-food">Ikan salmon, tuna, sarden - Omega-3 tinggi</li>
+                    <li class="good-food">Alpukat - Lemak tak jenuh tunggal</li>
+                    <li class="good-food">Kacang almond, walnut - Protein nabati</li>
+                    <li class="good-food">Minyak zaitun - Antioksidan tinggi</li>
+                    <li class="good-food">Apel, anggur, jeruk - Pektin & serat</li>
+                    <li class="good-food">Teh hijau - Katekin & antioksidan</li>
+                    <li class="good-food">Bawang putih - Allicin alami</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">⚠️</span> Makanan yang Harus Dihindari</h2>
+                <ul class="food-list">
+                    <li class="bad-food">Gorengan & makanan berminyak</li>
+                    <li class="bad-food">Daging merah berlemak</li>
+                    <li class="bad-food">Jeroan (hati, usus, otak)</li>
+                    <li class="bad-food">Kuning telur berlebihan</li>
+                    <li class="bad-food">Produk susu full cream</li>
+                    <li class="bad-food">Fast food & junk food</li>
+                    <li class="bad-food">Kue, donat, pastry</li>
+                    <li class="bad-food">Mentega & margarin</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">💪</span> Tips Menurunkan Kolesterol</h2>
+                <ul class="tips-list">
+                    <li>Olahraga minimal 30 menit/hari, 5x seminggu</li>
+                    <li>Turunkan berat badan 5-10% jika obesitas</li>
+                    <li>Berhenti merokok segera</li>
+                    <li>Batasi alkohol maksimal 1 gelas/hari</li>
+                    <li>Kelola stress dengan meditasi/yoga</li>
+                    <li>Konsumsi serat 25-30 gram/hari</li>
+                    <li>Minum air putih 8 gelas/hari</li>
+                    <li>Tidur berkualitas 7-8 jam/malam</li>
+                    <li>Periksa kolesterol rutin setiap 6 bulan</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">📊</span> Statistik Kolesterol Indonesia</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">35%</div>
+                        <div class="stat-label">Penduduk dengan kolesterol tinggi</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">28%</div>
+                        <div class="stat-label">Tidak menyadari kondisinya</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">&gt;40</div>
+                        <div class="stat-label">Usia rentan (tahun)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">60%</div>
+                        <div class="stat-label">Kurang aktivitas fisik</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-logo">❤️</div>
+            <h3>YUK CEK LEMAK MU!</h3>
+            <p><strong>Platform Monitoring Kolesterol Indonesia</strong></p>
+            <p style="margin: 15px 0;">Dikembangkan dengan ❤️ oleh: <strong style="color: #FF6B6B;">NIRMAYSI</strong></p>
+            <p style="color: #666; margin-top: 20px; font-size: 14px;">
+                ⚠️ <strong>Disclaimer:</strong> Hasil analisis ini hanya sebagai referensi awal. 
+                Untuk diagnosis dan penanganan yang tepat, silakan konsultasi dengan dokter atau ahli gizi profesional.
+            </p>
+            <p style="color: #999; margin-top: 10px;">© 2024 Yuk Cek Lemak Mu - All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('cholesterolForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const total = parseFloat(document.getElementById('totalCholesterol').value);
+            const ldl = parseFloat(document.getElementById('ldl').value);
+            const hdl = parseFloat(document.getElementById('hdl').value);
+            const triglycerides = parseFloat(document.getElementById('triglycerides').value);
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.getElementById('gender').value;
+            const resultDiv = document.getElementById('result');
+            
+            let status = '';
+            let className = '';
+            let recommendations = [];
+            let riskScore = 0;
+            
+            // Analisis Kolesterol Total
+            if (total < 200) {
+                status = '✅ OPTIMAL';
+                className = 'result-optimal';
+            } else if (total <= 239) {
+                status = '⚠️ BORDERLINE TINGGI';
+                className = 'result-borderline';
+                riskScore += 1;
+            } else {
+                status = '❌ TINGGI';
+                className = 'result-high';
+                riskScore += 2;
+            }
+            
+            // Analisis LDL
+            if (ldl >= 160) {
+                recommendations.push('LDL Anda tinggi! Kurangi makanan berlemak jenuh');
+                riskScore += 2;
+            } else if (ldl >= 130) {
+                recommendations.push('LDL borderline tinggi, perhatikan pola makan');
+                riskScore += 1;
+            }
+            
+            // Analisis HDL
+            if (hdl < 40) {
+                recommendations.push('HDL terlalu rendah! Tingkatkan aktivitas fisik');
+                riskScore += 2;
+            } else if (hdl < 60) {
+                recommendations.push('HDL perlu ditingkatkan dengan olahraga rutin');
+                riskScore += 1;
+            }
+            
+            // Analisis Trigliserida
+            if (triglycerides >= 200) {
+                recommendations.push('Trigliserida tinggi! Kurangi gula dan karbohidrat');
+                riskScore += 2;
+            } else if (triglycerides >= 150) {
+                recommendations.push('Trigliserida borderline, batasi makanan manis');
+                riskScore += 1;
+            }
+            
+            // Faktor risiko usia
+            if (age > 45 && gender === 'pria') {
+                recommendations.push('Usia > 45 tahun (pria), lakukan pemeriksaan rutin');
+            } else if (age > 55 && gender === 'wanita') {
+                recommendations.push('Usia > 55 tahun (wanita), monitor kesehatan jantung');
+            }
+            
+            // Hitung rasio
+            const ratio = (total / hdl).toFixed(2);
+            let ratioStatus = '';
+            if (ratio < 3.5) {
+                ratioStatus = 'Sangat Baik';
+            } else if (ratio < 5) {
+                ratioStatus = 'Baik';
+            } else {
+                ratioStatus = 'Berisiko';
+                riskScore += 1;
+            }
+            
+            // Generate hasil
+            let riskLevel = '';
+            if (riskScore === 0) {
+                riskLevel = '🟢 RISIKO RENDAH';
+            } else if (riskScore <= 3) {
+                riskLevel = '🟡 RISIKO SEDANG';
+            } else {
+                riskLevel = '🔴 RISIKO TINGGI';
+            }
+            
+            resultDiv.innerHTML = `
+                <h3>📋 HASIL PEMERIKSAAN LEMAK MU</h3>
+                <hr style="margin: 15px 0; border: 1px solid #eee;">
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <h2 style="margin: 10px 0;">Status Kolesterol: ${status}</h2>
+                    <p style="font-size: 1.2em; color: #666;">Level Risiko: ${riskLevel}</p>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                    <h4 style="margin-bottom: 10px;">📊 Detail Hasil:</h4>
+                    <p>📍 Total Kolesterol: <strong>${total} mg/dL</strong></p>
+                    <p>📍 LDL (Jahat): <strong>${ldl} mg/dL</strong></p>
+                    <p>📍 HDL (Baik): <strong>${hdl} mg/dL</strong></p>
+                    <p>📍 Trigliserida: <strong>${triglycerides} mg/dL</strong></p>
+                    <p>📍 Rasio Total/HDL: <strong>${ratio}</strong> (${ratioStatus})</p>
+                </div>
+                
+                ${recommendations.length > 0 ? `
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="margin-bottom: 10px;">💡 Rekomendasi untuk Anda:</h4>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            ${recommendations.map(rec => `<li style="margin: 5px 0;">${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+                
+                <div style="text-align: center; margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 100%); color: white; border-radius: 10px;">
+                    <p style="margin: 0; font-weight: bold;">🩺 Analisis by: NIRMAYSI Health System</p>
+                    <p style="margin: 5px 0; font-size: 0.9em;">Yuk Cek Lemak Mu - Your Cholesterol Partner</p>
+                </div>
+            `;
+            
+            resultDiv.className = 'result-box ' + className;
+            resultDiv.style.display = 'block';
+            
+            // Update meter indicator
+            const indicator = document.getElementById('meterIndicator');
+            let position = 0;
+            if (total < 200) {
+                position = (total / 200) * 33;
+            } else if (total < 240) {
+                position = 33 + ((total - 200) / 40) * 33;
+            } else {
+                position = 66 + Math.min(((total - 240) / 60) * 34, 34);
+            }
+            indicator.style.left = position + '%';
+            
+            // Scroll ke hasil
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
